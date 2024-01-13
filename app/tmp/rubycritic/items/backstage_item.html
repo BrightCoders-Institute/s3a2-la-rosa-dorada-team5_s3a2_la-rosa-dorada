@@ -72,11 +72,11 @@
               <div><span class="metric">3</span><small> methods</small></div>
             </div>
             <div class="col-md-3">
-              <div><span class="metric">3.5</span><small> complexity/method</small></div>
-              <div><span class="metric">0</span><small> churn</small></div>
+              <div><span class="metric">3.6</span><small> complexity/method</small></div>
+              <div><span class="metric">2</span><small> churn</small></div>
             </div>
             <div class="col-md-3">
-              <div><span class="metric">10.36</span><small> complexity</small></div>
+              <div><span class="metric">10.68</span><small> complexity</small></div>
               <div><span class="metric">0</span><small> duplications</small></div>
             </div>
           </div>
@@ -124,8 +124,8 @@ class BackstageItem &lt; AgedBrieItem<ol class="nocode errors smells">  <li>    
   end
 
   def update_quality
-    # The min quality value should be 0.
-    @quality = [@quality + calculate_quality_addition, 0].max
+    # The quality value should be between 0 and 50.
+    @quality = (@quality + calculate_quality_addition).clamp(0, 50)
   end
 end
 </code>

@@ -52,7 +52,7 @@
       </span>
     </div>
     <div>
-      <h3><small>. /</small> gilded_rose.rb</h3>
+      <h3><small>. /</small> items_generation_test.rb</h3>
     </div>
   </div>
   <!--End Page Title -->
@@ -68,15 +68,15 @@
           </div>
           <div class="code-statistics col-md-11">
             <div class="col-md-3">
-              <div><span class="metric">13</span><small> lines of codes</small></div>
-              <div><span class="metric">2</span><small> methods</small></div>
+              <div><span class="metric">33</span><small> lines of codes</small></div>
+              <div><span class="metric">4</span><small> methods</small></div>
             </div>
             <div class="col-md-3">
-              <div><span class="metric">1.6</span><small> complexity/method</small></div>
-              <div><span class="metric">2</span><small> churn</small></div>
+              <div><span class="metric">2.5</span><small> complexity/method</small></div>
+              <div><span class="metric">0</span><small> churn</small></div>
             </div>
             <div class="col-md-3">
-              <div><span class="metric">3.2</span><small> complexity</small></div>
+              <div><span class="metric">9.92</span><small> complexity</small></div>
               <div><span class="metric">0</span><small> duplications</small></div>
             </div>
           </div>
@@ -88,7 +88,7 @@
             <li><a href="#" id="toggle-code" class="toggle-button button">code</a></li>
             <li class="active">
               <a href="#" id="toggle-smells" class="toggle-button button">
-                0
+                1
                 smell
               </a>
             </li>
@@ -99,15 +99,35 @@
 
     <code class="prettyprint linenums lang-ruby file-code js-file-code"># frozen_string_literal: true
 
-# Class to specify Gilded Rose
-# items modification logic control.
-class GildedRose
-  def initialize(items)
-    @items = items
+require &#39;minitest/autorun&#39;
+require_relative &#39;../app/items/items_generation&#39;
+
+# Class to test items generation general behavior.
+class ItemsGenerationTest &lt; Minitest::Test
+  STANDARD_ITEMS_NAMES = [&#39;Standard Item&#39;, &#39;Test Item&#39;, &#39;Random Item&#39;, &#39;Test String&#39;].freeze
+
+  private
+
+  def create_test_item(item_name)<ol class="nocode errors smells">  <li>    <div class="description">      <div class="heading">        <span>          <i class="fa fa-warning" aria-hidden="true"></i>          <a href="https://github.com/troessner/reek/blob/master/docs/Utility-Function.md" target="_blank"><b>UtilityFunction</b></a>        </span>      </div>      <span>ItemsGenerationTest#create_test_item doesn't depend on instance state (maybe move it to another class?)</span>          </div>  </li></ol>
+    ItemsGeneration.create_item(item_name, 0, 0)
   end
 
-  def update_quality
-    @items.each(&amp;:update_item_data)
+  def assert_item_class(classname, item)
+    assert_kind_of classname, item
+  end
+
+  public
+
+  def test_standard_items
+    STANDARD_ITEMS_NAMES.each do |item_name|
+      assert_item_class(StandardItem, create_test_item(item_name))
+    end
+  end
+
+  def test_special_items
+    ItemsGeneration::SPECIAL_ITEMS_MAP.each do |item_name, classname|
+      assert_item_class(classname, create_test_item(item_name))
+    end
   end
 end
 </code>

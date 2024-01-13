@@ -52,7 +52,7 @@
       </span>
     </div>
     <div>
-      <h3><small>. /</small> gilded_rose.rb</h3>
+      <h3><small>. /</small> standard_item_test.rb</h3>
     </div>
   </div>
   <!--End Page Title -->
@@ -68,15 +68,15 @@
           </div>
           <div class="code-statistics col-md-11">
             <div class="col-md-3">
-              <div><span class="metric">13</span><small> lines of codes</small></div>
-              <div><span class="metric">2</span><small> methods</small></div>
+              <div><span class="metric">51</span><small> lines of codes</small></div>
+              <div><span class="metric">8</span><small> methods</small></div>
             </div>
             <div class="col-md-3">
-              <div><span class="metric">1.6</span><small> complexity/method</small></div>
-              <div><span class="metric">2</span><small> churn</small></div>
+              <div><span class="metric">5.5</span><small> complexity/method</small></div>
+              <div><span class="metric">0</span><small> churn</small></div>
             </div>
             <div class="col-md-3">
-              <div><span class="metric">3.2</span><small> complexity</small></div>
+              <div><span class="metric">44.16</span><small> complexity</small></div>
               <div><span class="metric">0</span><small> duplications</small></div>
             </div>
           </div>
@@ -99,15 +99,53 @@
 
     <code class="prettyprint linenums lang-ruby file-code js-file-code"># frozen_string_literal: true
 
-# Class to specify Gilded Rose
-# items modification logic control.
-class GildedRose
-  def initialize(items)
-    @items = items
+require &#39;minitest/autorun&#39;
+require_relative &#39;../app/items/items_generation&#39;
+
+# Class to test Gilded Rose standard items general behavior.
+class StandardItemTest &lt; Minitest::Test
+  TEST_ITEM_NAME = &#39;Standard item&#39;
+
+  protected
+
+  def test_item_name
+    TEST_ITEM_NAME
   end
 
-  def update_quality
-    @items.each(&amp;:update_item_data)
+  def create_test_item(sell_in, quality)
+    ItemsGeneration.create_item(test_item_name, sell_in, quality)
+  end
+
+  def assert_sell_in_update(sell_in, expected_number)
+    test_item = create_test_item(sell_in, 0)
+    test_item.send(:update_sell_in)
+    assert_equal expected_number, test_item.sell_in
+  end
+
+  def assert_quality_update(sell_in, quality, expected_quality)
+    test_item = create_test_item(sell_in, quality)
+    test_item.send(:update_quality)
+    assert_equal expected_quality, test_item.quality
+  end
+
+  def check_items_scenarios(scenarios_data_list)
+    scenarios_data_list.each { |scenario| assert_quality_update(*scenario) }
+  end
+
+  public
+
+  def test_sell_in_expiration
+    assert create_test_item(0, 0).send(:sell_in_has_expired?)
+    (1..10).each { |number| refute create_test_item(number, 0).send(:sell_in_has_expired?) }
+  end
+
+  def test_sell_in_updates
+    (1..10).each { |number| assert_sell_in_update(number, number - 1) }
+    (-10..0).each { |number| assert_sell_in_update(number, 0) }
+  end
+
+  def test_quality_updates
+    check_items_scenarios([[1, 10, 9], [0, 10, 8], [1, 50, 49], [1, 0, 0], [0, 0, 0]])
   end
 end
 </code>

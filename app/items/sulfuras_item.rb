@@ -11,5 +11,11 @@ class SulfurasItem < StandardItem
     @quality = 80
   end
 
+  private
+
+  def update_quality; end
+
+  public
+
   def update_item_data; end
 end

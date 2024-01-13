@@ -25,7 +25,7 @@ class BackstageItem < AgedBrieItem
   end
 
   def update_quality
-    # The min quality value should be 0.
-    @quality = [@quality + calculate_quality_addition, 0].max
+    # The quality value should be between 0 and 50.
+    @quality = (@quality + calculate_quality_addition).clamp(0, 50)
   end
 end
